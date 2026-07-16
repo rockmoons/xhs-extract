@@ -102,11 +102,29 @@ resp = requests.post(
     json={"table": {"name": "笔记列表", "fields": fields}}
 )
 data = resp.json()
-table_id = data["data"]["table_id"]
-print(f"TABLE_ID={table_id}")
-```
-
-### 3. 写入记录
+	table_id = data["data"]["table_id"]
+	print(f"TABLE_ID={table_id}")
+	```
+	
+	> 应用创建的多维表格保存在**应用的企业云空间**，用户默认看不到。创建完成后把链接发给用户即可：`https://bytedance.feishu.cn/base/{bitable_id}?from=manual`
+	
+	### 3. 分享给用户（可选）
+	
+	如需把特定用户加为协作者：
+	
+	```python
+	resp = requests.post(
+	    f"https://open.feishu.cn/open-apis/drive/v1/permissions/{bitable_id}/members?type=bitable&need_notification=false",
+	    headers={"Authorization": f"Bearer {token}"},
+	    json={
+	        "member_type": "email",      # 或 "openid" / "unionid"
+	        "member_id": "user@example.com",
+	        "perm": "full_access"
+	    }
+	)
+	```
+	
+	### 4. 写入记录
 
 ```python
 # feishu_write.py
